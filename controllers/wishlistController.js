@@ -6,7 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 
 // Create or update a user's wishlist
-export const userWislList = asyncHandler(async (req, res, next) => {
+export const userWishList = asyncHandler(async (req, res, next) => {
   const { userId, carId } = req.body;
 
   // Validate input
