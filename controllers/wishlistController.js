@@ -9,9 +9,10 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 export const userWishList = asyncHandler(async (req, res, next) => {
   const { userId, carId } = req.body;
 
+
   // Validate input
   if (!userId || !carId) {
-    return res.status(400).json({ success: false, message: "User ID and Car ID are required" });
+    return res.status(400).json({ success: false, message: "UserId and CarId are required" });
   }
 
   // Check if user exists
@@ -27,21 +28,22 @@ export const userWishList = asyncHandler(async (req, res, next) => {
   }
 
   // Find or create wishlist
-  let wishlist = await Wishlist.findOne({ user: userId });
+  let wishlist = await Wishlist.findOne({ userId });
 
   if (!wishlist) {
-    wishlist = new Wishlist({ user: userId });
+    wishlist = new Wishlist({ userId });
   }
 
+
   // Check if car already exists in the wishlist
-  const carInWishlist = wishlist.cars.find(item => item.car.toString() === carId);
+  const carInWishlist = wishlist.cars.find(item => item.carId.toString() === carId);
 
   if (carInWishlist) {
     // Remove car if it already exists
     wishlist.cars.pull(carInWishlist._id);
   } else {
     // Add car if it doesn't exist
-    wishlist.cars.push({ car: carId });
+    wishlist.cars.push({ carId });
   }
 
   await wishlist.save();
@@ -49,6 +51,8 @@ export const userWishList = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, message: "Wishlist updated successfully", data: wishlist });
 })
 
+
+//get
 export const getWishlistById = asyncHandler(async (req, res, next) => {
 
   const { userId } = req.params;
@@ -58,9 +62,11 @@ export const getWishlistById = asyncHandler(async (req, res, next) => {
     return res.status(404).json({ success: false, message: 'wishlist not found' });
   }
 
-  res.json({ success: true, message: 'wishlist update successfully', data: wishlist });
+  res.json({ success: true, message: 'Wishlist', data: wishlist });
 })
 
+
+//Remove
 export const removeWishlistById = asyncHandler(async (req, res, next) => {
 
   const { userId } = req.params;

@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 
 const wishlistSchema = new mongoose.Schema({
-    user: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
     cars: [
         {
-            car: {
+            carId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Car',
                 required: true,
@@ -24,3 +24,4 @@ const wishlistSchema = new mongoose.Schema({
 });
 
 export const Wishlist = mongoose.model("Wishlist", wishlistSchema);
+
