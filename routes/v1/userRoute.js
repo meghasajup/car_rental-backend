@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/create', upload.single('profileImage'), asyncHandler(userCreate));
 router.post('/login', asyncHandler(userLogin));
-router.get('/profile/:id', authUser, asyncHandler(userProfile));
+router.get('/profile', authUser, asyncHandler(userProfile));
 router.post("/logout", authUser, asyncHandler(userLogout));
 router.get("/check-user", authUser, asyncHandler(checkUser));
 
