@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 
 // Create
 export const createCar = async (req, res) => {
-    //Validate request body
+    // Validate request body
     const { error } = createCarsValidation(req.body);
     if (error) {
         return res.status(400).send({ status: false, error: error.details[0].message });
@@ -25,7 +25,7 @@ export const createCar = async (req, res) => {
     }
 
     const newCar = new Car({
-        ...req.body,
+        ...req.body, // This includes the 'description' field from the request body
         image: imageUrl,
         admin: req.user._id
     });
@@ -37,6 +37,7 @@ export const createCar = async (req, res) => {
         res.status(500).send({ status: false, error: err.message });
     }
 };
+
 
 
 
@@ -93,6 +94,7 @@ export const updateCar = async (req, res) => {
 
 
 
+
 // Delete
 export const deleteCar = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -119,22 +121,25 @@ export const deleteCar = async (req, res) => {
 
 //Search
 export const search = asyncHandler(async (req, res) => {
-    const { model } = req.query; // Extracting the car model from query parameters
+    const { model, description } = req.query;
 
-    if (!model) {
-        return res.status(400).json({ success: false, message: 'Model query parameter is required' });
+    const searchCriteria = {
+        deleted: false,
+    };
+
+    if (model) {
+        searchCriteria.model = { $regex: model, $options: 'i' };
     }
 
-    // Search for cars that match the provided model (case-insensitive, partial match)
-    const cars = await Car.find({
-        model: { $regex: model, $options: 'i' }, // 'i' makes it case-insensitive
-        deleted: false // Only search for non-deleted cars
-    });
+    if (description) {
+        searchCriteria.description = { $regex: description, $options: 'i' };
+    }
+
+    const cars = await Car.find(searchCriteria);
 
     if (cars.length === 0) {
         return res.status(404).json({ success: false, message: 'No cars found' });
     }
 
-    // Return the matching cars
     res.status(200).json({ success: true, message: 'Cars found successfully', data: cars });
-});
+}); 

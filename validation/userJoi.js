@@ -15,8 +15,7 @@ export const validateUserRegistration = (data) => {
             }),
         phone:
             Joi.string().pattern(/^[0-9]{10}$/).required(),
-        // profileImage:
-        //     Joi.string().uri().required(), // URL validation
+            profileImage: Joi.string().optional(),
     });
     return schema.validate(data);
 };

@@ -16,7 +16,7 @@ const carSchema = new mongoose.Schema({
   image: {
     type: [String],
     required: true,
-    default: [""], //cloudinay image
+    default: [""], // Cloudinary image
   },
   pricePerDay: {
     type: Number,
@@ -56,6 +56,10 @@ const carSchema = new mongoose.Schema({
     type: String, // Example: 'Hatchback', 'SUV'
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
   admin: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Admin',
@@ -67,5 +71,4 @@ const carSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
-
 export const Car = mongoose.model("Car", carSchema);

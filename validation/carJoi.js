@@ -26,6 +26,8 @@ export const createCarsValidation = (data) => {
             Joi.boolean().required(),
         category:
             Joi.string().required(),
+        description:
+            Joi.string().required(),
     });
 
     return schema.validate(data);

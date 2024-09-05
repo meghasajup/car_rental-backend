@@ -8,7 +8,7 @@ import { cloudinaryInstance } from '../config/cloudinaryConfig.js';
 export const userCreate = asyncHandler(async (req, res, next) => {
     const { error } = await validateUserRegistration(req.body);
     if (error) {
-        return res.status(402).json({ success: false, message: error.details[0].message });
+        return res.status(400).json({ success: false, message: error.details[0].message });
     }
 
     const { name, email, password, phone, profileImage } = req.body;
