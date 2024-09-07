@@ -14,9 +14,9 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: 'https://caristacarrental.vercel.app/',
+    origin: 'https://caristacarrental.vercel.app',
     credentials:true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 
