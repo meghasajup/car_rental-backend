@@ -1,19 +1,27 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import { User } from '../models/userModel.js'; 
 
-export const authUser = (req, res, next) => {
-
+export const authUser = async (req, res, next) => {
     const { token } = req.cookies;
-    console.log("token ---->", token);
+    console.log("Token received: ", token);
 
     if (!token) {
-        return res.status(401).json({ success: false, message: "User not authenticated" })
+        return res.status(401).json({ success: false, message: "User not authenticated" });
     }
 
-    const tokenVerifyed = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    if (!tokenVerifyed) {
-        return res.status(400).json({ success: false, message: "Invalid token" })
-    }
-    req.user = tokenVerifyed
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        console.log("Token decoded: ", decoded);
 
-    next();
-} 
+        const user = await User.findOne({ email: decoded.email });
+        if (!user) {
+            return res.status(401).json({ success: false, message: "User not found" });
+        }
+
+        req.user = user;  
+        next();
+    } catch (err) {
+        console.error("Token Verification Error:", err);
+        return res.status(400).json({ success: false, message: "Invalid token" });
+    }
+};

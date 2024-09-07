@@ -55,25 +55,26 @@ export const adminLogin = asyncHandler(async (req, res, next) => {
 
     const { email, password } = req.body;
 
+    // Find the admin by email
     const adminExist = await Admin.findOne({ email });
-
     if (!adminExist) {
         return res.status(404).json({ success: false, message: "Admin does not exist" });
     }
 
-    // Validate password
+    // Compare the provided password with the hashed password stored in the database
     const isMatch = await bcrypt.compare(password, adminExist.password);
     if (!isMatch) {
         return res.status(400).json({ success: false, message: "Invalid credentials" });
     }
 
-    // Create token
+    // Generate token
     const token = generateAdminToken(email, "admin");
 
     // Set token in cookie
     res.cookie("Admintoken", token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
     res.json({ success: true, message: "Admin login successfully" });
 });
+
 
 
 //Admin profile
