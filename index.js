@@ -14,7 +14,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://caristacarrental.vercel.app/',
     credentials:true,
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -24,6 +24,9 @@ app.use(bodyParser.json());
 // API routes
 app.use('/api', apiRouter);
 
+app.get("/",(req, res)=>{
+    res.send("Welcome to Carista Car Rental API")
+})
 
 app.all('*', (req, res) => {
     res.status(404).json({ message: 'Endpoint does not exist' });
