@@ -3,6 +3,8 @@ import Joi from 'joi';
 // Registration
 export const validateUserRegistration = (data) => {
     const schema = Joi.object({
+        username:
+            Joi.string().min(3).max(30).required(),
         name:
             Joi.string().min(3).max(30).required(),
         email:

@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
-// Middleware to validate review token
 export const validateReviewToken = asyncHandler(async (req, res, next) => {
     const reviewToken = req.headers['review-token'] || req.headers['Review-Token'];
     console.log("token=======>", reviewToken);

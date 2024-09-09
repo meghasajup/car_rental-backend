@@ -30,8 +30,8 @@ export const createReview = asyncHandler(async (req, res, next) => {
 
     // Create the review with correct fields
     const review = new Review({
-        user: userId,  // Map userId to user
-        car: carId,    // Map carId to car
+        user: userId,  
+        car: carId,    
         rating,
         reviewText,
     });

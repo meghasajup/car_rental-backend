@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-// Verify admin token middleware
 const verifyAdminToken = (req, res, next) => {
     // Extract token from cookies or Authorization header
     const token = req.cookies.Admintoken || req.headers['authorization']?.replace(/^Bearer\s/, '');

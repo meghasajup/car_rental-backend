@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    username: { type: String, required: false, unique: false },
+
     name: {
         type: String,
-        unique: true, // Only if you're using a unique username
+        required: true
     },
     email: {
         type: String,

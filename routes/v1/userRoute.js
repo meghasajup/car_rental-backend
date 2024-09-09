@@ -12,6 +12,4 @@ router.get('/profile', authUser, asyncHandler(userProfile));
 router.post("/logout", authUser, asyncHandler(userLogout));
 router.get("/check-user", authUser, asyncHandler(checkUser));
 
-// router.get("/check-user/:id", authUser, asyncHandler(checkUser));
-
 export default router;

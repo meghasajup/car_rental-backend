@@ -9,6 +9,6 @@ router.post("/createBooking", authUser, asyncHandler(createBooking));
 router.get("/getBookings", authUser, asyncHandler(getBooking));
 router.get("/getBooking/:id", authUser, asyncHandler(getBookingById));
 router.put('/update/:id', authUser, asyncHandler(updateBooking));
-router.delete("/delete/:id", authUser, asyncHandler(deleteBooking));
+router.delete("/delete/:id", authUser, asyncHandler(deleteBooking));    
 
 export default router;

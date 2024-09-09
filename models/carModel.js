@@ -56,7 +56,7 @@ const carSchema = new mongoose.Schema({
     type: String, // Example: 'Hatchback', 'SUV'
     required: true,
   },
-  description: {
+  location: {
     type: String,
     required: true,
   },

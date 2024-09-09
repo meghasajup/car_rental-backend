@@ -15,7 +15,6 @@ import {
 import verifyAdminToken from '../../middlewares/authAdmin.js'
 const router = express.Router();
 
-// Protect all admin routes with the verifyAdminToken middleware
 
 
 // Admin creation route

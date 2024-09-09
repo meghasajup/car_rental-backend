@@ -11,4 +11,4 @@ router.put("/update/:id", authUser, updatePayments)
 router.delete("/delete/:id", authUser, deletePaymetById)
 router.delete("/deleteall", authUser, deleteAllPayments)
 
-export default router;
+export default router; 

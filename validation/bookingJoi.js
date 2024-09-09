@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 export const bookingSchema = Joi.object({
     user:
-        Joi.string().length(25).hex().required(),
+        Joi.string().required(),
     car:
         Joi.string().length(25).hex().required(),
     startDate:

@@ -25,7 +25,7 @@ export const createCar = async (req, res) => {
     }
 
     const newCar = new Car({
-        ...req.body, // This includes the 'description' field from the request body
+        ...req.body, 
         image: imageUrl,
         admin: req.user._id
     });

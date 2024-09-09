@@ -11,12 +11,12 @@ export const userCreate = asyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: false, message: error.details[0].message });
     }
 
-    const { name, email, password, phone, profileImage } = req.body;
+    const { name, email, password, phone, profileImage, username } = req.body;
 
-    // Check if user exists
-    const userExist = await User.findOne({ email });
+    // Check if user exists by email or username
+    const userExist = await User.findOne({ $or: [{ email }, { username }] });
     if (userExist) {
-        return res.status(400).json({ success: false, message: 'User already exists' });
+        return res.status(400).json({ success: false, message: 'User already exists with this email or username' });
     }
 
     // Hash the password
@@ -36,6 +36,7 @@ export const userCreate = asyncHandler(async (req, res, next) => {
         email,
         password: hashedPassword,
         phone,
+        username, 
         profileImage: profileImageUrl,
     });
 
@@ -46,6 +47,8 @@ export const userCreate = asyncHandler(async (req, res, next) => {
     res.cookie('token', token);
     res.json({ success: true, message: "User created successfully" });
 });
+
+
 
 
 

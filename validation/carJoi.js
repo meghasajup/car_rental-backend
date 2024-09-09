@@ -26,7 +26,7 @@ export const createCarsValidation = (data) => {
             Joi.boolean().required(),
         category:
             Joi.string().required(),
-        description:
+        location:
             Joi.string().required(),
     });
 

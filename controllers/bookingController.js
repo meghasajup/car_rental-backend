@@ -4,38 +4,59 @@ import { User } from '../models/userModel.js';
 
 // Create
 export const createBooking = async (req, res) => {
-    const { user, car, startDate, startTime, returnDate, returnTime, totalPrice, pickupLocation, dropoffLocation, licenceNumber, paymentStatus } = req.body;
-
+    const {
+      user, car, startDate, startTime, returnDate, returnTime, totalPrice,
+      pickupLocation, dropoffLocation, licenceNumber
+    } = req.body;
+  
     try {
-        // Check the car and user exist or not
-        const foundCar = await Car.findById(car);
-        const foundUser = await User.findById(user);
-
-        if (!foundCar || !foundUser) {
-            return res.status(404).json({ success: false, message: "Car or User not found" });
+      const foundCar = await Car.findById(car);
+      const foundUser = await User.findById(user);
+  
+      if (!foundCar) {
+        return res.status(404).json({ success: false, message: "Car not found" });
+      }
+  
+      if (!foundUser) {
+        return res.status(404).json({ success: false, message: "User not found" });
+      }
+  
+      const booking = new Booking({
+        user, 
+        car,
+        startDate,
+        startTime,
+        returnDate,
+        returnTime,
+        totalPrice,
+        pickupLocation,
+        dropoffLocation,
+        licenceNumber,
+        pricePerDay: foundCar.pricePerDay,
+      });
+  
+      await booking.save();
+  
+      res.status(201).json({
+        success: true,
+        message: "Booking created successfully",
+        data: { booking
+        //   bookingId: booking._id,
+        //   user: booking.User,
+        //   car: booking.car,
+        //   startDate: booking.startDate,
+        //   returnDate: booking.returnDate,
+        //   totalPrice: booking.totalPrice,
+        //   pickupLocation: booking.pickupLocation,
+        //   dropoffLocation: booking.dropoffLocation,
         }
-
-        const booking = new Booking({
-            user,
-            car,
-            startDate,
-            startTime,
-            returnDate,
-            returnTime,
-            totalPrice,
-            pickupLocation,
-            dropoffLocation,
-            licenceNumber,
-            paymentStatus,
-        });
-
-        await booking.save();
-
-        res.status(201).json({ success: true, message: "Booking created successfully", data: booking });
+      });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
-};
+  };
+  
+
 
 
 
