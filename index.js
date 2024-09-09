@@ -16,7 +16,6 @@ connectDB();
 app.use(cors({
     origin: 'https://carista-rental.vercel.app',
     credentials:true,
-    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 

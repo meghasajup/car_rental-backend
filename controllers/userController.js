@@ -44,7 +44,7 @@ export const userCreate = asyncHandler(async (req, res, next) => {
 
     // Generate token
     const token = generateUserToken(email);
-    res.cookie('token', token);
+    res.cookie("token", token,{sameSite:"None", secure:true});
     res.json({ success: true, message: "User created successfully" });
 });
 
@@ -81,7 +81,7 @@ export const userLogin = asyncHandler(async (req, res, next) => {
         secure: true,
         httpOnly: true,
     };
-     res.cookie('token',token,cookieOptions)
+    res.cookie("token", token,{sameSite:"None", secure:true});
     res.json({ success: true, message: 'Login successfully' })
 });
 
