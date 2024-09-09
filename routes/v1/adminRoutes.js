@@ -12,7 +12,7 @@ import {
   getReviewByCarId
 } from "../../controllers/adminController.js";
 
-import verifyAdminToken from '../../middlewares/authAdmin.js'
+import verifyAdminToken from '../../middlewares/authAdmin.js';
 const router = express.Router();
 
 
@@ -36,7 +36,7 @@ router.delete("/userByDelete/:id", delteUser)
 
 
 // Car Management Routes
-router.post("/create", adminCreateCar)
+router.post("/create", verifyAdminToken, adminCreateCar)
 router.get("/cars", getAllCars);
 router.get('/carsById/:id', getAllCarsById)
 router.put('/carUpdate/:id', adminUpdateCar)
