@@ -1,108 +1,34 @@
-import { Payment } from "../models/paymentModel.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import { paymentSchema } from "../validation/paymentJoi.js";
+import Stripe from 'stripe';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
+const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY);
 
-export const createPayment = asyncHandler(async (req, res) => {
-    // Validate request body using Joi
-    const { error } = paymentSchema.validate(req.body, { abortEarly: false });
-    if (error) {
-        return res.status(400).json({
-            success: false,
-            message: 'Validation error',
-            errors: error.details.map(err => err.message)
+export const MakePayment = asyncHandler(async (req, res, next) => {
+    const { carDetails, amount } = req.body;
+
+    // Ensure amount is in the smallest currency unit (e.g., paise for INR)
+    const amountInPaise = amount * 100;
+
+    const lineItems = [{
+        price_data: {
+            currency: 'inr',
+            product_data: {
+                name: `Car Booking ${carDetails.model}`,
+                description: `Booking for car ID: ${carDetails.location}`,
+            },
+            unit_amount: amountInPaise,
+        },
+        quantity: 1,
+    }];
+
+    
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: lineItems,
+            mode: 'payment',
+            success_url: `${process.env.VITE_CLIENT_DOMAIN}/user/payment-success`,
+            cancel_url: `${process.env.VITE_CLIENT_DOMAIN}/user/payment/cancel`,
         });
-    }
 
-    const { booking, amount, paymentMethod, transactionId, description } = req.body;
-
-    const existingPayment = await Payment.findOne({ transactionId });
-    if (existingPayment) {
-        return res.status(400).json({ success: false, message: "Payment already exists" });
-    }
-
-    const newPayment = new Payment({ booking, amount, paymentMethod, transactionId, description });
-    await newPayment.save();
-
-    res.json({ success: true, message: 'Payment transaction successfully completed!', data: newPayment });
+        res.json({ success: true, sessionId: session.id });    
 });
-
-//get payment by id
-export const getPaymentById = asyncHandler(async (req, res, next) => {
-
-    const { id } = req.params;
-    const Payement = await Payment.findById(id).populate("booking")
-
-    if (!Payement) {
-        return res.status(404).json({ success: false, message: 'Payment not found' });
-    }
-
-    res.json({ success: true, message: 'payment details successfully getted', data: Payement });
-})
-
-//get all payment
-export const getPayments = asyncHandler(async (req, res, next) => {
-
-    const bookings = await Payment.find()
-        .populate('booking')
-
-
-    res.status(200).json({
-        success: true,
-        message: 'Payment booking list fetched successfully',
-        data: bookings
-    });
-});
-
-//update
-export const updatePayments = asyncHandler(async (req, res) => {
-    // Validate request body using Joi
-    const { error } = paymentSchema.validate(req.body, { abortEarly: false });
-    if (error) {
-        return res.status(400).json({
-            success: false,
-            message: 'Validation error',
-            errors: error.details.map(err => err.message)
-        });
-    }
-
-    const { booking, amount, paymentMethod, transactionId, description } = req.body;
-    const { id } = req.params;
-
-    const updatedPayment = await Payment.findByIdAndUpdate(
-        id,
-        { booking, amount, paymentMethod, transactionId, description },
-        { new: true }
-    );
-
-    if (!updatedPayment) {
-        return res.status(404).json({ success: false, message: 'Payment not found' });
-    }
-
-    res.json({ success: true, message: 'Payment updated successfully!', data: updatedPayment });
-});
-
-//delete
-export const deletePaymetById = asyncHandler(async (req, res, next) => {
-    const { id } = req.params;
-    const deletePaymetById = await Payment.findByIdAndDelete(id);
-
-    if (!deletePaymetById) {
-        return res.status(404).json({ success: false, message: 'payment not found' });
-    }
-
-    res.json({ success: true, message: 'payment deleted successfully!', data: deletePaymetById });
-});
-
-//delete all 
-export const deleteAllPayments = asyncHandler(async (req, res, next) => {
-    // Delete all payments
-    const result = await Payment.deleteMany({});
-
-    // Check if any payments were deleted
-    if (result.deletedCount === 0) {
-        return res.status(404).json({ success: false, message: 'No payments found to delete' });
-    }
-
-    res.json({ success: true, message: 'All payments deleted successfully!' });
-}); 
