@@ -17,7 +17,7 @@ v1Router.use("/admin", adminRoute);
 v1Router.use("/review", reviewRoute);
 v1Router.use("/wishlist", wishlistRoute);
 v1Router.use("/payment", paymentRoute);
-v1Router.use("/location",location);
+v1Router.use("/location",location)
 
 
-export default v1Router 
+export default v1Router ;

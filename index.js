@@ -14,8 +14,8 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: ['https://carista-rental.vercel.app' 
-        //'http://localhost:5173'
+    origin: ['https://carista-rental.vercel.app' ,
+        'http://localhost:5173'
     ],
     credentials:true,
 }));

@@ -14,7 +14,7 @@ export const userCreate = asyncHandler(async (req, res, next) => {
     const { name, email, password, phone, profileImage, username } = req.body;
 
     // Check if user exists by email or username
-    const userExist = await User.findOne({ $or: [{ email }, { username }] });
+    const userExist = await User.findOne({ $or: [{ email }] });
     if (userExist) {
         return res.status(400).json({ success: false, message: 'User already exists with this email or username' });
     }
