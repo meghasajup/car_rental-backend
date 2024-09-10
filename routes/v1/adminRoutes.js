@@ -2,14 +2,15 @@
 import express from "express";
 import {
   AdminCreate, adminCreateCar, adminDeleteCar, adminGetCarReviewById, adminGetCarReviews,
-  adminLogin, AdminLogout, adminProfile, checkAdmin,
+  adminLogin, AdminLogout, checkAdmin,
   adminUpdateCar, delteUser, updateUser,
   BookingDelete, bookingupdate, getAllBookings,
   getAllCars, getAllCarsById, getAllUserById, getAllUsers, getBookingId,
   adminUpdateCarReview,
   adminDeleteCarReview,
   AdminUserCreate,
-  getReviewByCarId
+  getReviewByCarId,
+  getAllDetails
 } from "../../controllers/adminController.js";
 
 import verifyAdminToken from '../../middlewares/authAdmin.js';
@@ -21,8 +22,9 @@ const router = express.Router();
 router.post("/create", AdminCreate);
 router.post("/login", adminLogin);
 router.use("/", verifyAdminToken)
-router.get("/adminById/:id", adminProfile)
 router.post("/logout", AdminLogout)
+
+router.get("/getalldetails",verifyAdminToken, getAllDetails)
 
 router.get("/check-admin", checkAdmin)
 
@@ -54,4 +56,5 @@ router.get("/reviewById/:id", adminGetCarReviewById)
 router.get("/getbycarid/:car", getReviewByCarId)
 router.put("/updateReview/:id", adminUpdateCarReview)
 router.delete("/deleteReview/:id", adminDeleteCarReview)
+
 export default router;

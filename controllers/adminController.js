@@ -77,13 +77,6 @@ export const adminLogin = asyncHandler(async (req, res, next) => {
 
 
 
-//Admin profile
-export const adminProfile = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    const userData = await Admin.findById(id).select("-password")
-    res.json({ success: true, message: 'admin data fetched', data: userData })
-})
-
 
 //Check admin
 export const checkAdmin = asyncHandler(async (req, res, next) => {
@@ -93,6 +86,29 @@ export const checkAdmin = asyncHandler(async (req, res, next) => {
     }
     res.json({ success: true, message: 'Admin is authenticated' })
 })
+
+//getAllDetails
+export const getAllDetails = asyncHandler(async (req, res, next) => {
+    try {
+        if (!req.admin) {
+            return res.status(403).json({ message: 'Access denied. Admin details not found.' });
+        }
+        
+        const { email } = req.admin; // Use req.admin instead of req.user
+        const admin = await Admin.findOne({ email }).populate('car');
+        
+        if (!admin) {
+            return res.status(404).json({ message: 'Admin not found' });
+        }
+
+        res.json({
+            data: admin,
+        });
+    } catch (error) {
+        res.status(error.status || 500).json({ message: error.message || "Internal server error" });
+    }
+});
+
 
 
 //Admin logout
@@ -113,7 +129,7 @@ export const AdminUserCreate = asyncHandler(async (req, res, next) => {
         return res.status(402).json({ success: false, message: error.details[0].message });
     }
 
-    const { name, email, password, phone } = req.body;
+    const { name, email, password, phone, username } = req.body;
 
     const userExit = await User.findOne({ email })
     if (userExit) {
@@ -125,7 +141,7 @@ export const AdminUserCreate = asyncHandler(async (req, res, next) => {
     const hashedPassword = bcrypt.hashSync(password, salt)
     
 
-    const newUser = new User({ name, email, password: hashedPassword, phone })
+    const newUser = new User({ name, email, password: hashedPassword, phone, username })
     await newUser.save()
 
 
@@ -181,7 +197,6 @@ export const delteUser = asyncHandler(async (req, res, next) => {
     }
     res.json({ success: true, message: 'User deleted successfully', data: deletedUser });
 })
-
 
 // Car Management Routes
 
@@ -377,4 +392,4 @@ export const getReviewByCarId = asyncHandler(async (req, res, next) => {
     }
 
     res.json({ success: true, message: 'Reviews fetched successfully', data: reviews });
-})
+});
