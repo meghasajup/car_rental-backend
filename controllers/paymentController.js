@@ -27,7 +27,7 @@ export const MakePayment = asyncHandler(async (req, res, next) => {
             line_items: lineItems,
             mode: 'payment',
             success_url: `${process.env.VITE_CLIENT_DOMAIN}/user/payment-success`,
-            cancel_url: `${process.env.VITE_CLIENT_DOMAIN}/user/payment/cancel`,
+            cancel_url: `${process.env.VITE_CLIENT_DOMAIN}/user/payment-cancel`,
         });
 
         res.json({ success: true, sessionId: session.id });    

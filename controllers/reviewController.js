@@ -6,6 +6,7 @@ import { reviewSchema } from '../validation/reviewJoi.js';
 
 export const createReview = asyncHandler(async (req, res, next) => {
     // Validate request body using Joi
+    req.body.userId = req?.user?._id?.toString();
     const { error } = reviewSchema.validate(req.body, { abortEarly: false });
     if (error) {
         return res.status(400).json({
@@ -14,6 +15,8 @@ export const createReview = asyncHandler(async (req, res, next) => {
             errors: error.details.map(err => err.message),
         });
     }
+
+
 
     const { userId, carId, rating, reviewText } = req.body;
 
@@ -49,17 +52,11 @@ export const getCarReview = asyncHandler(async (req, res, next) => {
     res.json({ success: true, message: 'Review list fetched', data: reviewList });
 })
 
-// Get review by ID
-export const getCarReviewById = asyncHandler(async (req, res, next) => {
-
-    const { id } = req.params;
-    const reviewById = await Review.findById(id);
-
-    if (!reviewById) {
-        return res.status(404).json({ success: false, message: 'Review not found' });
-    }
-
-    res.json({ success: true, message: 'Review fetched successfully', data: reviewById });
+// Get reviews by car ID
+export const getReviewsByCarId = asyncHandler(async (req, res, next) => {
+    const { carId } = req.params;
+    const reviews = await Review.find({ car: carId }).populate('user', 'name');
+    res.json({ success: true, message: 'Reviews fetched successfully', data: reviews });
 });
 
 // Update review

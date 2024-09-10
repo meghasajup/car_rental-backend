@@ -6,6 +6,7 @@ export const reviewSchema = Joi.object({
     'string.empty': 'User ID is required',
     'any.required': 'User ID is required',
   }),
+  
   carId: Joi.string().required().messages({
     'string.empty': 'Car ID is required',
     'any.required': 'Car ID is required',
