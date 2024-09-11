@@ -4,17 +4,17 @@ export const bookingSchema = Joi.object({
     user:
         Joi.string().required(),
     car:
-        Joi.string().length(25).hex().required(),
+        Joi.string().required(),
     startDate:
         Joi.date().required(),
     startTime:
-        Joi.string().pattern(/^\d{2}:\d{2}$/).required(),
+        Joi.string().pattern(/^\d{2}:\d{2}$/),
     returnDate:
         Joi.date().required(),
     returnTime:
-        Joi.string().pattern(/^\d{2}:\d{2}$/).required(),
-    totalPrice:
-        Joi.number().positive().required(),
+        Joi.string().pattern(/^\d{2}:\d{2}$/),
+    totalCost:
+        Joi.number().positive(),
     status:
         Joi.string().valid('Pending', 'Confirmed', 'Cancelled', 'Completed').default('Pending'),
     pickupLocation:

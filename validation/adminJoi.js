@@ -1,5 +1,6 @@
 import Joi from 'joi';
 
+// Updated Joi schema to match the adminModel and remove phone
 export const adminCreate = Joi.object({
     adminName: Joi.string().min(3).max(30).required().messages({
         'string.base': 'Admin name should be a string.',

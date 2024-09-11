@@ -48,7 +48,7 @@ router.delete("/carDelete/:id", adminDeleteCar)
 router.get("/bookings", getAllBookings);
 router.get("/bookingsById/:id", getBookingId);
 router.put("/bookingUpdate/:id", bookingupdate);
-router.delete("/deletBooking/:id", BookingDelete);
+router.delete("/deleteBooking/:id", BookingDelete);
 
 // Review Management Routes
 router.get("/reviews", adminGetCarReviews)

@@ -30,7 +30,6 @@ export const AdminCreate = asyncHandler(async (req, res, next) => {
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    
 
     // Create new admin
     const newAdmin = new Admin({ adminName, email, password: hashedPassword });
@@ -43,6 +42,7 @@ export const AdminCreate = asyncHandler(async (req, res, next) => {
 
     res.json({ success: true, message: "Admin created successfully" });
 });
+
 
 
 //Admin login
@@ -93,10 +93,10 @@ export const getAllDetails = asyncHandler(async (req, res, next) => {
         if (!req.admin) {
             return res.status(403).json({ message: 'Access denied. Admin details not found.' });
         }
-        
+
         const { email } = req.admin; // Use req.admin instead of req.user
         const admin = await Admin.findOne({ email }).populate('car');
-        
+
         if (!admin) {
             return res.status(404).json({ message: 'Admin not found' });
         }
@@ -139,7 +139,7 @@ export const AdminUserCreate = asyncHandler(async (req, res, next) => {
     //hasing
     const salt = 10
     const hashedPassword = bcrypt.hashSync(password, salt)
-    
+
 
     const newUser = new User({ name, email, password: hashedPassword, phone, username })
     await newUser.save()
@@ -281,7 +281,7 @@ export const adminDeleteCar = asyncHandler(async (req, res, next) => {
 //get all bookings
 export const getAllBookings = asyncHandler(async (req, res, next) => {
 
-    const bookings = await Booking.find().populate('user car');
+    const bookings = await Booking.find().populate('user').populate('car');
     res.json({ success: true, message: 'Bookings list fetched successfully', data: bookings });
 })
 
@@ -298,6 +298,8 @@ export const getBookingId = asyncHandler(async (req, res, next) => {
 
 //update booking
 export const bookingupdate = asyncHandler(async (req, res, next) => {
+    console.log('Request body:', req.body); // Log request body
+    console.log('Request params:', req.params); // Log request params
 
     const { error, value } = bookingSchema.validate(req.body);
     if (error) {
@@ -306,15 +308,16 @@ export const bookingupdate = asyncHandler(async (req, res, next) => {
 
     const { id } = req.params;
 
-    const { user, car, startTime, startDate, endDate, endTime, totalPrice, pickupLocation, dropoffLocation } = req.body;
+    const { user, car, startTime, startDate, returnDate, returnTime, totalPrice, pickupLocation, dropoffLocation } = req.body;
     const updatedBooking = await Booking.findByIdAndUpdate(id, {
-        user, car, startTime, startDate, endDate, endTime, totalPrice, pickupLocation, dropoffLocation
+        user, car, startTime, startDate, returnDate, returnTime, totalPrice, pickupLocation, dropoffLocation
     }, { new: true });
     if (!updatedBooking) {
         return res.status(404).json({ success: false, message: 'Booking not found' });
     }
     res.json({ success: true, message: 'Booking updated successfully', data: updatedBooking });
-})
+});
+
 
 //delete booking
 export const BookingDelete = asyncHandler(async (req, res, next) => {

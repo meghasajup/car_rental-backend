@@ -1,11 +1,9 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-    username: { type: String, required: false, unique: false },
-
-    name: {
+const adminSchema = new mongoose.Schema({
+    adminName: {
         type: String,
-        required: true
+        required: true,
     },
     email: {
         type: String,
@@ -16,19 +14,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    phone: {
-        type: String,
-        required: true,
-    },
     isAdmin: {
         type: Boolean,
-        default: false,
+        default: true, 
     },
     profileImage: {
         type: String,
-        default: '',  // Default value, can be updated when an image is uploaded
+        default: '',  
     },
 }, {
     timestamps: true,
 });
-export const Admin = mongoose.model("Admin", userSchema);
+
+export const Admin = mongoose.model("Admin", adminSchema);

@@ -5,7 +5,7 @@ import { User } from '../models/userModel.js';
 // Create
 export const createBooking = async (req, res) => {
     const {
-      user, car, startDate, startTime, returnDate, returnTime, totalPrice,
+      user, car, pickupDateTime, dropoffDateTime, totalCost,
       pickupLocation, dropoffLocation, licenceNumber
     } = req.body;
   
@@ -24,11 +24,9 @@ export const createBooking = async (req, res) => {
       const booking = new Booking({
         user, 
         car,
-        startDate,
-        startTime,
-        returnDate,
-        returnTime,
-        totalPrice,
+        pickupDateTime,
+        dropoffDateTime,
+        totalCost,
         pickupLocation,
         dropoffLocation,
         licenceNumber,
@@ -41,14 +39,6 @@ export const createBooking = async (req, res) => {
         success: true,
         message: "Booking created successfully",
         data: { booking
-        //   bookingId: booking._id,
-        //   user: booking.User,
-        //   car: booking.car,
-        //   startDate: booking.startDate,
-        //   returnDate: booking.returnDate,
-        //   totalPrice: booking.totalPrice,
-        //   pickupLocation: booking.pickupLocation,
-        //   dropoffLocation: booking.dropoffLocation,
         }
       });
     } catch (error) {

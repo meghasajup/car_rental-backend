@@ -3,14 +3,22 @@ import mongoose from "mongoose";
 const bookingSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     car: { type: mongoose.Schema.Types.ObjectId, ref: 'Car', required: true },
-    startDate: { type: Date, required: true },
-    startTime: { type: String, required: true },
-    returnDate: { type: Date, required: true },
-    returnTime: { type: String, required: true },
-    totalPrice: { type: Number, required: true },
+    startDate: { type: Date },
+    startTime: { type: String },
+    returnDate: { type: Date },
+    returnTime: { type: String },
+    totalCost: { type: Number, required: true },
     pickupLocation: { type: String, required: true },
     dropoffLocation: { type: String, required: true },
-    licenceNumber: { type: String, required: true }
+    licenceNumber: { type: String, required: true },
+    pickupDateTime: {
+        type: Date,
+        required: true,
+      },
+      dropoffDateTime: {
+        type: Date,
+        required: true,
+      },
 }, {
     timestamps: true,
 });
