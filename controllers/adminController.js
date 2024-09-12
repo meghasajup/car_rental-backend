@@ -54,6 +54,7 @@ export const adminLogin = asyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: false, message: error.details[0].message });
     }
 
+    
     const { email, password } = req.body;
 
     // Find the admin by email
