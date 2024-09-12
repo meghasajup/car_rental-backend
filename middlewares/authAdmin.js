@@ -4,7 +4,7 @@ const verifyAdminToken = (req, res, next) => {
     // Extract token from cookies or Authorization header
     // 
 
-    console.log("requestData:", req.headers, req.cookies)
+    // console.log("requestData:", req.headers, req.cookies)
     const token = req.cookies.admintoken || req.headers['authorization']?.replace(/^Bearer\s/, '');
 
     if (!token) {

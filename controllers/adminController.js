@@ -48,6 +48,7 @@ export const AdminCreate = asyncHandler(async (req, res, next) => {
 //Admin login
 export const adminLogin = asyncHandler(async (req, res, next) => {
     // Validate the request body using Joi
+    // console.log("requestData:", req.headers)
     const { error } = adminLoginSchema.validate(req.body);
     if (error) {
         return res.status(400).json({ success: false, message: error.details[0].message });
