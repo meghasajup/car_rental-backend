@@ -54,7 +54,7 @@ export const adminLogin = asyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: false, message: error.details[0].message });
     }
 
-    
+
     const { email, password } = req.body;
 
     // Find the admin by email
@@ -115,7 +115,7 @@ export const getAllDetails = asyncHandler(async (req, res, next) => {
 
 //Admin logout
 export const AdminLogout = asyncHandler(async (req, res, next) => {
-    res.clearCookie("admintoken")
+    // res.clearCookie("admintoken")
     res.json({ success: true, message: 'Admin logged out successfully' })
 })
 
