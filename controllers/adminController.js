@@ -73,7 +73,7 @@ export const adminLogin = asyncHandler(async (req, res, next) => {
 
     // Set token in cookie
     res.cookie("admintoken", token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.json({ success: true, message: "Admin login successfully" });
+    res.json({ success: true, message: "Admin login successfully", loginToken: token});
 });
 
 
