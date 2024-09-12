@@ -4,8 +4,8 @@ const verifyAdminToken = (req, res, next) => {
     // Extract token from cookies or Authorization header
     // 
 
-    // console.log("requestData:", req.headers, req.cookies)
-    const token = req.cookies.loginToken || req.headers['authorization']?.replace(/^Bearer\s/, '');
+    console.log("requestData:", req.headers, req.cookies)
+    const token = req.headers['authorization']?.replace(/^Bearer\s/, '');
 
     if (!token) {
         return res.status(403).json({ success: false, message: 'Access denied. No token provided.' });
