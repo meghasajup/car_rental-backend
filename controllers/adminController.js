@@ -38,7 +38,7 @@ export const AdminCreate = asyncHandler(async (req, res, next) => {
     const adminToken = generateAdminToken(email, "admin");
 
     // Set token in cookie
-    res.cookie("Admintoken", adminToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie("admintoken", adminToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
 
     res.json({ success: true, message: "Admin created successfully" });
 });
@@ -71,7 +71,7 @@ export const adminLogin = asyncHandler(async (req, res, next) => {
     const token = generateAdminToken(email, "admin");
 
     // Set token in cookie
-    res.cookie("Admintoken", token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie("admintoken", token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
     res.json({ success: true, message: "Admin login successfully" });
 });
 
@@ -113,7 +113,7 @@ export const getAllDetails = asyncHandler(async (req, res, next) => {
 
 //Admin logout
 export const AdminLogout = asyncHandler(async (req, res, next) => {
-    res.clearCookie("Admintoken")
+    res.clearCookie("admintoken")
     res.json({ success: true, message: 'Admin logged out successfully' })
 })
 
@@ -148,8 +148,8 @@ export const AdminUserCreate = asyncHandler(async (req, res, next) => {
     //token
     const adminToken = generateAdminToken(email, "admin");
     // const token=generateUserToken(email)
-    // res.cookie("Admintoken", adminToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.cookie('Admintoken', adminToken)
+    // res.cookie("admintoken", adminToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie('admintoken', adminToken)
 
     res.json({ success: true, message: "user created By admin is successfully" });
 })

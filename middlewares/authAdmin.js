@@ -2,7 +2,10 @@ import jwt from 'jsonwebtoken';
 
 const verifyAdminToken = (req, res, next) => {
     // Extract token from cookies or Authorization header
-    const token = req.cookies.Admintoken || req.headers['authorization']?.replace(/^Bearer\s/, '');
+    // 
+
+    console.log("requestData:", req.headers, req.cookies)
+    const token = req.cookies.admintoken || req.headers['authorization']?.replace(/^Bearer\s/, '');
 
     if (!token) {
         return res.status(403).json({ success: false, message: 'Access denied. No token provided.' });
