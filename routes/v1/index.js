@@ -7,6 +7,7 @@ import reviewRoute from './reviewRoute.js'
 import wishlistRoute from './wishlistRoute.js'
 import paymentRoute from './paymentRoute.js'
 import adminTotalCount from './adminTotalCountRoute.js'
+import nodemailerRoute from './nodemailerRoute.js'
 
 const v1Router = express.Router();
 
@@ -18,6 +19,6 @@ v1Router.use("/review", reviewRoute);
 v1Router.use("/wishlist", wishlistRoute);
 v1Router.use("/payment", paymentRoute);
 v1Router.use("/reports", adminTotalCount);
-
+v1Router.use("/nodemailer", nodemailerRoute);
 
 export default v1Router ;
