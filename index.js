@@ -14,9 +14,8 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: ['https://carista-rental.vercel.app' ,
-        'http://localhost:5173'
-    ],
+    origin: 'http://localhost:5173',
+    
     credentials:true,
 }));
 app.use(bodyParser.json());
@@ -37,3 +36,7 @@ app.all('*', (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+
+
+// https://carista-rental.vercel.app'

@@ -22,7 +22,7 @@ export const createBooking = async (req, res) => {
       }
   
       const booking = new Booking({
-        user, 
+        user: req.user._id, 
         car,
         pickupDateTime,
         dropoffDateTime,
@@ -127,3 +127,25 @@ export const deleteBooking = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+
+
+
+//get by user
+export const getBookingsByUser = async (req, res) => {
+    const userId = req.user._id; 
+
+    try {
+        const bookings = await Booking.find({ user: userId }).populate('car', '-deleted');
+        console.log("Bookings found:", bookings); 
+
+        if (!bookings || bookings.length === 0) {
+            return res.status(404).json({ success: false, message: "No bookings found" });
+        }
+
+        res.status(200).json({ success: true, data: bookings });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+

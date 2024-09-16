@@ -10,7 +10,7 @@ const bookingSchema = new mongoose.Schema({
     totalCost: { type: Number, required: true },
     pickupLocation: { type: String, required: true },
     dropoffLocation: { type: String, required: true },
-    licenceNumber: { type: String, required: true },
+    licenceNumber: { type: String },
     pickupDateTime: {
         type: Date,
         required: true,

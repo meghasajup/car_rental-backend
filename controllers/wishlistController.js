@@ -1,85 +1,57 @@
-import { Car } from "../models/carModel.js";
-import { User } from "../models/userModel.js";
-import { Wishlist } from "../models/wishlistModel.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { Wishlist } from '../models/wishlistModel.js';
 
+// Add a car to the wishlist
+export const addToWishlist = async (req, res) => {
+    const { carId } = req.body;
+    const userId = req.user._id;
 
+    try {
+        const existingWishlist = await Wishlist.findOne({ user: userId, car: carId });
 
-// Create or update a user's wishlist
-export const userWishList = asyncHandler(async (req, res, next) => {
-  const { userId, carId } = req.body;
+        if (existingWishlist) {
+            return res.status(400).json({ success: false, message: "Car is already in wishlist" });
+        }
 
+        const wishlist = new Wishlist({
+            user: userId,
+            car: carId,
+        });
 
-  // Validate input
-  if (!userId || !carId) {
-    return res.status(400).json({ success: false, message: "UserId and CarId are required" });
-  }
+        await wishlist.save();
 
-  // Check if user exists
-  const userExists = await User.findById(userId);
-  if (!userExists) {
-    return res.status(404).json({ success: false, message: "User not found" });
-  }
+        res.status(201).json({ success: true, message: "Car added to wishlist", wishlist });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error adding to wishlist", error: error.message });
+    }
+};
 
-  // Check if car exists
-  const carExists = await Car.findById(carId);
-  if (!carExists) {
-    return res.status(404).json({ success: false, message: "Car not found" });
-  }
+// Remove a car from the wishlist
+export const removeFromWishlist = async (req, res) => {
+    const { carId } = req.params;
+    const userId = req.user._id;
 
-  // Find or create wishlist
-  let wishlist = await Wishlist.findOne({ userId });
+    try {
+        const wishlist = await Wishlist.findOneAndDelete({ user: userId, car: carId });
 
-  if (!wishlist) {
-    wishlist = new Wishlist({ userId });
-  }
+        if (!wishlist) {
+            return res.status(404).json({ success: false, message: "Car not found in wishlist" });
+        }
 
+        res.status(200).json({ success: true, message: "Car removed from wishlist" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error removing from wishlist", error: error.message });
+    }
+};
 
-  // Check if car already exists in the wishlist
-  const carInWishlist = wishlist.cars.find(item => item.carId.toString() === carId);
+// Get all wishlist items for a user
+export const getUserWishlist = async (req, res) => {
+    const userId = req.user._id;
 
-  if (carInWishlist) {
-    // Remove car if it already exists
-    wishlist.cars.pull(carInWishlist._id);
-  } else {
-    // Add car if it doesn't exist
-    wishlist.cars.push({ carId });
-  }
+    try {
+        const wishlist = await Wishlist.find({ user: userId }).populate('car');
 
-  await wishlist.save();
-
-  res.status(200).json({ success: true, message: "Wishlist updated successfully", data: wishlist });
-})
-
-
-//get
-export const getWishlistById = asyncHandler(async (req, res, next) => {
-
-  const { userId } = req.params;
-  const wishlist = await Wishlist.findOne({ user: userId }).populate("cars");
-
-  if (!wishlist) {
-    return res.status(404).json({ success: false, message: 'wishlist not found' });
-  }
-
-  res.json({ success: true, message: 'Wishlist', data: wishlist });
-})
-
-
-//Remove
-export const removeWishlistById = asyncHandler(async (req, res, next) => {
-
-  const { userId } = req.params;
-
-  // Find the wishlist for the user
-  const wishlist = await Wishlist.findOne({ user: userId });
-
-  if (!wishlist) {
-    return res.status(404).json({ success: false, message: 'Wishlist not found' });
-  }
-
-  // Delete the wishlist
-  await Wishlist.deleteOne({ user: userId });
-
-  res.json({ success: true, message: 'Wishlist deleted successfully' });
-})
+        res.status(200).json({ success: true, wishlist });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error fetching wishlist", error: error.message });
+    }
+};
