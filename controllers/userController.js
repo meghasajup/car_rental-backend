@@ -6,6 +6,10 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { cloudinaryInstance } from '../config/cloudinaryConfig.js';
 
 export const userCreate = asyncHandler(async (req, res, next) => {
+    // Log the request body to see what data is coming from the form
+    console.log("Request Body:", req.body);
+
+    // Validate req.body (but not the image, which is in req.file)
     const { error } = await validateUserRegistration(req.body);
     if (error) {
         console.log("Validation Error:", error.details[0].message);
@@ -24,6 +28,9 @@ export const userCreate = asyncHandler(async (req, res, next) => {
     // Hash the password
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
+
+    // Log to ensure password is being hashed
+    console.log("Hashed Password:", hashedPassword);
 
     // Upload profile image to Cloudinary
     let profileImageUrl = '';
