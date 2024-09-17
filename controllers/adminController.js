@@ -356,7 +356,7 @@ export const adminGetCarReviewById = asyncHandler(async (req, res, next) => {
 })
 
 
-//create review
+//update review
 export const adminUpdateCarReview = asyncHandler(async (req, res, next) => {
 
     const { userId, carId, rating, reviewText } = req.body;
