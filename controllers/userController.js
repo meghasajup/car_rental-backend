@@ -8,45 +8,61 @@ import { cloudinaryInstance } from '../config/cloudinaryConfig.js';
 export const userCreate = asyncHandler(async (req, res, next) => {
     const { error } = await validateUserRegistration(req.body);
     if (error) {
+        console.log("Validation Error:", error.details[0].message);
         return res.status(400).json({ success: false, message: error.details[0].message });
     }
 
-    const { name, email, password, phone, profileImage, username } = req.body;
+    const { name, email, password, phone, username } = req.body;
 
-    // Check if user exists by email or username
-    const userExist = await User.findOne({ $or: [{ email }] });
+    // Check if user exists
+    const userExist = await User.findOne({ email });
     if (userExist) {
-        return res.status(400).json({ success: false, message: 'User already exists with this email or username' });
+        console.log("User already exists:", email);
+        return res.status(400).json({ success: false, message: 'User already exists' });
     }
 
     // Hash the password
-    const salt = 10;
+    const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
 
     // Upload profile image to Cloudinary
     let profileImageUrl = '';
     if (req.file) {
-        const result = await cloudinaryInstance.uploader.upload(req.file.path);
-        profileImageUrl = result.secure_url;
+        try {
+            const result = await cloudinaryInstance.uploader.upload(req.file.path);
+            profileImageUrl = result.secure_url;
+            console.log("Profile Image Uploaded:", profileImageUrl);
+        } catch (err) {
+            console.error("Error uploading profile image:", err);
+            return res.status(500).json({ success: false, message: "Image upload failed" });
+        }
     }
 
     // Save new user
-    const newUser = new User({
-        name,
-        email,
-        password: hashedPassword,
-        phone,
-        username, 
-        profileImage: profileImageUrl,
-    });
+    try {
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword,
+            phone,
+            username,
+            profileImage: profileImageUrl,
+        });
 
-    await newUser.save();
+        await newUser.save();
+        console.log("New User Saved:", newUser);
 
-    // Generate token
-    const token = generateUserToken(email);
-    res.cookie("token", token,{sameSite:"None", secure:true});
-    res.json({ success: true, message: "User created successfully" });
+        // Generate token and set cookie
+        const token = generateUserToken(email);
+        res.cookie("token", token, { sameSite: "None", secure: true });
+        res.json({ success: true, message: "User created successfully" });
+    } catch (error) {
+        console.error("Error saving user:", error);
+        res.status(500).json({ success: false, message: "User registration failed" });
+    }
 });
+
+
 
 
 
