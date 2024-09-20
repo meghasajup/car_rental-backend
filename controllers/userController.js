@@ -18,12 +18,19 @@ export const userCreate = asyncHandler(async (req, res, next) => {
 
     const { name, email, password, phone, username } = req.body;
 
-    // Check if user exists
-    const userExist = await User.findOne({ email });
-    if (userExist) {
-        console.log("User already exists:", email);
-        return res.status(400).json({ success: false, message: 'User already exists' });
+    // Check if user with the same email or username exists
+    const existingEmailUser = await User.findOne({ email });
+    const existingUsernameUser = await User.findOne({ username });
+
+    if (existingEmailUser) {
+        console.log("User already exists with email:", email);
+        return res.status(400).json({ success: false, message: 'Email is already registered' });
     }
+
+    // if (existingUsernameUser) {
+    //     console.log("User already exists with username:", username);
+    //     return res.status(400).json({ success: false, message: 'Username is already taken' });
+    // }
 
     // Hash the password
     const salt = bcrypt.genSaltSync(10);
@@ -61,18 +68,29 @@ export const userCreate = asyncHandler(async (req, res, next) => {
 
         // Generate token and set cookie
         const token = generateUserToken(email);
-        res.cookie("token", token, { sameSite: "None", secure: true });
+        const cookieOptions = {
+            sameSite: 'None',
+            secure: true,
+            httpOnly: true,
+        };
+        res.cookie("token", token, cookieOptions);
+
+        // Success response
         res.json({ success: true, message: "User created successfully" });
     } catch (error) {
+        if (error.code === 11000) {
+            // Handle duplicate key error (e.g., email or username already exists)
+            const duplicatedField = Object.keys(error.keyValue)[0];
+            console.error("Duplicate Key Error:", duplicatedField, "is already taken");
+            return res.status(400).json({
+                success: false,
+                message: `${duplicatedField.charAt(0).toUpperCase() + duplicatedField.slice(1)} is already taken`
+            });
+        }
         console.error("Error saving user:", error);
-        res.status(500).json({ success: false, message: "User registration failed" });
+        return res.status(500).json({ success: false, message: "User registration failed" });
     }
 });
-
-
-
-
-
 
 
 
@@ -104,7 +122,7 @@ export const userLogin = asyncHandler(async (req, res, next) => {
         secure: true,
         httpOnly: true,
     };
-    res.cookie("token", token,{sameSite:"None", secure:true});
+    res.cookie("token", token, { sameSite: "None", secure: true });
     res.json({ success: true, message: 'Login successfully' })
 });
 
