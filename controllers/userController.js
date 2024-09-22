@@ -27,6 +27,11 @@ export const userCreate = asyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: false, message: 'Email is already registered' });
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ success: false, message: "Invalid email" });
+    }
+
     // if (existingUsernameUser) {
     //     console.log("User already exists with username:", username);
     //     return res.status(400).json({ success: false, message: 'Username is already taken' });
