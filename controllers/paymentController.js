@@ -14,7 +14,7 @@ export const MakePayment = asyncHandler(async (req, res, next) => {
             currency: 'inr',
             product_data: {
                 name: `Car Booking ${carDetails.model}`,
-                description: `Booking for car ID: ${carDetails.location}`,
+                description: `Booking for car Location: ${carDetails.location}`,
             },
             unit_amount: amountInPaise,
         },
