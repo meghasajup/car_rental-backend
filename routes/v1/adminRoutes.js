@@ -10,7 +10,9 @@ import {
   adminDeleteCarReview,
   AdminUserCreate,
   getReviewByCarId,
-  getAllDetails
+  getAllDetails,
+  cancelBookingAdmin,
+  confirmBookingAdmin,
 } from "../../controllers/adminController.js";
 
 import verifyAdminToken from '../../middlewares/authAdmin.js';
@@ -49,6 +51,9 @@ router.get("/bookings", getAllBookings);
 router.get("/bookingsById/:id", getBookingId);
 router.put("/bookingUpdate/:id", bookingupdate);
 router.delete("/deleteBooking/:id", BookingDelete);
+
+router.put("/cancel/:bookingId", cancelBookingAdmin);
+router.put("/confirm/:bookingId", confirmBookingAdmin);
 
 // Review Management Routes
 router.get("/reviews", adminGetCarReviews)

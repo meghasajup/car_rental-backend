@@ -320,6 +320,40 @@ export const bookingupdate = asyncHandler(async (req, res, next) => {
     res.json({ success: true, message: 'Booking updated successfully', data: updatedBooking });
 });
 
+//cancel booking
+export const cancelBookingAdmin = async (req, res, next) => {
+    const { bookingId } = req.params;
+  
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ success: false, message: "Booking not found" });
+    }
+  
+    booking.bookingStatus = 'cancelled';
+    booking.cancelledAt = new Date();
+  
+    await booking.save();
+  
+    res.status(200).json({ success: true, message: "Booking cancelled", data: booking });
+  };
+
+  //confirm booking
+export const confirmBookingAdmin = async (req, res, next) => {
+    const { bookingId } = req.params;
+  
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ success: false, message: "Booking not found" });
+    }
+  
+    booking.bookingStatus = 'confirmed';
+    booking.confirmedAt = new Date();
+  
+    await booking.save();
+  
+    res.status(200).json({ success: true, message: "Booking confirmed", data: booking });
+  };
+
 
 //delete booking
 export const BookingDelete = asyncHandler(async (req, res, next) => {

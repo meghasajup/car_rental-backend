@@ -149,3 +149,19 @@ export const getBookingsByUser = async (req, res) => {
     }
 };
 
+
+export const cancelBooking = async (req, res, next) => {
+  const { bookingId } = req.params;
+
+  const booking = await Booking.findById(bookingId);
+  if (!booking) {
+    return res.status(404).json({ success: false, message: "Booking not found" });
+  }
+
+  booking.status = 'Cancelled';
+  booking.cancelledAt = new Date();
+
+  await booking.save();
+
+  res.status(200).json({ success: true, message: "Booking cancelled", data: booking });
+};
