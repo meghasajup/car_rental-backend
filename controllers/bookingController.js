@@ -158,7 +158,7 @@ export const cancelBooking = async (req, res, next) => {
     return res.status(404).json({ success: false, message: "Booking not found" });
   }
 
-  booking.status = 'Cancelled';
+  booking.bookingStatus = 'cancelled';
   booking.cancelledAt = new Date();
 
   await booking.save();
