@@ -10,6 +10,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { adminCreate, adminLoginSchema } from "../validation/adminJoi.js";
 import { createCarsValidation } from "../validation/carJoi.js";
 import bookingSchema from "../validation/bookingJoi.js";
+import { cloudinaryInstance } from "../config/cloudinaryConfig.js";
 
 
 //Admin create
@@ -209,7 +210,7 @@ export const adminCreateCar = asyncHandler(async (req, res, next) => {
     const { error } = createCarsValidation(req.body);
     if (error) return res.status(400).json({ success: false, message: error.details[0].message });
 
-    const { brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability } = req.body;
+    const { brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability, location, category } = req.body;
 
     if (!req.file) {
         return res.status(400).json({ success: false, message: "Please upload an image" });
@@ -223,7 +224,7 @@ export const adminCreateCar = asyncHandler(async (req, res, next) => {
     // Upload an image
     const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, { folder: "car" });
 
-    const newCar = new Car({ brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability });
+    const newCar = new Car({ brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability, location, category });
     if (uploadResult?.url) {
         newCar.image = uploadResult.url;
     }
